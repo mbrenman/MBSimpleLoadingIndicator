@@ -24,7 +24,12 @@
     _loadview = [[MBLoadingIndicator alloc] init];
     
     //NOTE: Any extra loader can be done here, including sizing, colors, animation speed, etc
-    //      Pre-start changes will not be animated.   
+    //      Pre-start changes will not be animated.
+    [_loadview setLoaderStyle:MBLoaderHalfCircle];
+    [_loadview setLoaderSize:MBLoaderLarge];
+    [_loadview setStartPosition:MBLoaderRight];
+    [_loadview setAnimationSpeed:MBLoaderSpeedFast];
+    [_loadview offsetCenterXBy:-12.5f];
     
     //Start the loader
     [self.loadview start];
@@ -43,25 +48,34 @@
             if (count % 2 != 0) {
                 
                 //Change loader colors
-                [_loadview setLoadedColor:[UIColor colorWithRed:0.61 green:0.85 blue:0.94 alpha:1]];
-                [_loadview setLoaderBackgroundColor:[UIColor colorWithRed:0.55 green:0.54 blue:0.53 alpha:1]];
+                [_loadview setLoadedColor:[UIColor darkGrayColor]];
+                [_loadview setLoaderBackgroundColor:[UIColor whiteColor]];
+                [_loadview setBackColor:[UIColor lightGrayColor]];
                 
                 //Change loader sizes
                 [_loadview setWidth:15];
                 [_loadview setOuterLoaderBuffer:0];
+                
+                //Move the loader
+                [_loadview offsetCenterXBy:25.0f];
             } else {
                 
                 //Change loader colors
-                [_loadview setLoadedColor:[UIColor lightGrayColor]];
-                [_loadview setLoaderBackgroundColor:[UIColor darkGrayColor]];
+                [_loadview setLoadedColor:[UIColor orangeColor]];
+                [_loadview setLoaderBackgroundColor:[UIColor blackColor]];
+                [_loadview setBackColor:[UIColor magentaColor]];
                 
                 //Change loader sizes
                 [_loadview setOuterLoaderBuffer:15];
                 [_loadview setWidth:5];
+                
+                //Move the loader
+                [_loadview offsetCenterXBy:-25.0f];
             }
             
             //Increment the loader
             [_loadview incrementPercentageBy:17];
+            
         });
     
     }
