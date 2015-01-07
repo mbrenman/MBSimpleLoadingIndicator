@@ -1,0 +1,14 @@
+PODS:
+  - MBSimpleLoadingIndicator (0.1.0)
+
+DEPENDENCIES:
+  - MBSimpleLoadingIndicator (from `../`)
+
+EXTERNAL SOURCES:
+  MBSimpleLoadingIndicator:
+    :path: ../
+
+SPEC CHECKSUMS:
+  MBSimpleLoadingIndicator: 87999519be82692f352e98fa9ff03b7da12edb9c
+
+COCOAPODS: 0.35.0
