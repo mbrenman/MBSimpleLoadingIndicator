@@ -1,6 +1,6 @@
 # MBSimpleLoadingIndicator
 
-![demo](http://i.imgur.com/elIbtCV.gif)
+![demo](http://i.imgur.com/iNn66PI.gif)
 
 Code:
 ``` objc
