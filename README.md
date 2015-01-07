@@ -14,6 +14,8 @@ Code:
   [self.view addSubview:self.loadview];
 ```
 
+![animprops](http://i.imgur.com/LVvInDR.png)
+
 ## Usage
 
 ###Change the percentage
