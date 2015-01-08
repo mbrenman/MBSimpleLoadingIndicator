@@ -1,0 +1,10 @@
+PODS:
+  - MBSimpleLoadingIndicator (0.1.0)
+
+DEPENDENCIES:
+  - MBSimpleLoadingIndicator
+
+SPEC CHECKSUMS:
+  MBSimpleLoadingIndicator: d85007e4fee8ed8d842babe205321d817ac421dd
+
+COCOAPODS: 0.35.0
