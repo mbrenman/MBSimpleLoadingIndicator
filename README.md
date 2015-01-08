@@ -82,13 +82,17 @@ it, simply add the following line to your Podfile:
     pod "MBSimpleLoadingIndicator"
 
 ##Troubleshooting
-*Open an issue with GitHub's issue reporting system
-*Send me an email at mattbrenman@gmail.com
-*Send me a tweet at @mattbrenman with #MBLoaderIndicator
+* Open an issue with GitHub's issue reporting system
+* Send me an email at mattbrenman@gmail.com
+* Send me a tweet at @mattbrenman with #MBLoaderIndicator
 
 ## Author
 
 mbrenman, mattbrenman@gmail.com
+
+## Acknowledgements
+* Thanks to [Richard](https://github.com/cwRichardKim/) for design tips and help
+* Used Bohemian Sketch 3 for design and LICEcap for the gifs
 
 ## License
 
