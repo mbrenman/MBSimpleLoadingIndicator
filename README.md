@@ -14,7 +14,7 @@ Code:
   [self.view addSubview:self.loadview];
 ```
 
-![animprops](http://i.imgur.com/LVvInDR.png)
+![animprops](http://i.imgur.com/ea1v6om.gif)
 
 ## Usage
 
