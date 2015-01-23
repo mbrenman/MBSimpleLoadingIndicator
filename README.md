@@ -31,7 +31,7 @@ Code:
 ``` objc
 //Change loader colors
 [_loadview setLoadedColor:[UIColor darkGrayColor]];
-[_loadview setLoaderBackgroundColor:[UIColor whiteColor]];
+[_loadview setBufferColor:[UIColor whiteColor]];
 
 //Change loader sizes
 [_loadview setWidth:15];
@@ -70,6 +70,9 @@ NSInteger amt = [_loadview getPercentage];
 ``` objc
 //Hide the loader (useful if error in main app occured)
 [_loadview dismiss];
+
+//Turn off interaction blocking
+[_loadview allowClicks:YES];
 ```
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
