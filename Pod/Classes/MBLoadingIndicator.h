@@ -30,6 +30,7 @@ enum LoaderSizes {MBLoaderTiny, MBLoaderSmall, MBLoaderMedium, MBLoaderLarge};
 - (void)setStartPosition:(MBLoaderStartPosition)startPos;
 - (void)setLoaderSize:(MBLoaderSize)size;
 - (void)setRadius:(NSInteger)radius;
+- (void)allowClicks:(BOOL)allowed;
 
 //Starting and Ending Animation
 - (void)start;
@@ -39,7 +40,7 @@ enum LoaderSizes {MBLoaderTiny, MBLoaderSmall, MBLoaderMedium, MBLoaderLarge};
 //Anytime Methods (animated after start)
 // --Colors
 - (void)setBackColor:(UIColor *)backColor;
-- (void)setLoaderBackgroundColor:(UIColor *)circleColor;
+- (void)setBufferColor:(UIColor *)circleColor;
 - (void)setLoadedColor:(UIColor *)loadedColor;
 // --Circle Properties
 - (void)setWidth:(NSInteger)width;

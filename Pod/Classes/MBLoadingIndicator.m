@@ -17,7 +17,7 @@ const CGFloat pi = 3.14159265359;
 @property (nonatomic) CGRect frame;
 @property (nonatomic) CGFloat alpha;
 @property (nonatomic, strong) UIColor *backColor;
-@property (nonatomic, strong) UIColor *loaderBackgroundColor;
+@property (nonatomic, strong) UIColor *bufferColor;
 @property (nonatomic, strong) UIColor *loadedColor;
 
 //Animation Properties
@@ -32,19 +32,19 @@ const CGFloat pi = 3.14159265359;
 @property (nonatomic) BOOL endingAnimStarted;
 @property (nonatomic) BOOL widthAnimating;
 @property (nonatomic) BOOL loadedColorAnimating;
-@property (nonatomic) BOOL loaderBackgroundColorAnimating;
+@property (nonatomic) BOOL bufferColorAnimating;
 @property (nonatomic) BOOL backgroundColorAnimating;
 // --Animation Queues
 @property (nonatomic) NSMutableArray *widthQueue;
 @property (nonatomic) NSMutableArray *loadedColorQueue;
-@property (nonatomic) NSMutableArray *loaderBackgroundColorQueue;
+@property (nonatomic) NSMutableArray *bufferColorQueue;
 @property (nonatomic) NSMutableArray *backgroundColorQueue;
 
 //Loader Path properties
 @property (nonatomic) MBLoaderStyle style;
 @property (nonatomic) NSInteger percentage;
 @property (nonatomic) NSInteger prevPercentage;
-@property (nonatomic, strong) UIBezierPath *loaderBackgroundPath;
+@property (nonatomic, strong) UIBezierPath *bufferPath;
 @property (nonatomic, strong) UIBezierPath *loaderPath;
 @property (nonatomic) CGFloat arcLength;
 @property (nonatomic) CGFloat offset;
@@ -95,11 +95,7 @@ const CGFloat pi = 3.14159265359;
                      forKey:kCATransactionAnimationDuration];
     
     [CATransaction setCompletionBlock:^{
-        if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
-            
-            // Start interaction with application
-            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        }
+        [self allowClicks:YES];
         [self removeFromSuperview];
     }];
     
@@ -126,11 +122,11 @@ const CGFloat pi = 3.14159265359;
         [_loaderPath moveToPoint:CGPointMake(rect.origin.x, rect.origin.y + self.radius)];
         [_loaderPath addLineToPoint:CGPointMake(rect.origin.x + (self.percentage/100.0f) * 2 * self.radius, rect.origin.y + self.radius)];
         
-        _loaderBackgroundPath = [UIBezierPath bezierPath];
-        [_loaderBackgroundPath moveToPoint:CGPointMake(rect.origin.x, rect.origin.y + self.radius)];
-        [_loaderBackgroundPath addLineToPoint:CGPointMake(rect.origin.x + 2 * self.radius, rect.origin.y + self.radius)];
+        _bufferPath = [UIBezierPath bezierPath];
+        [_bufferPath moveToPoint:CGPointMake(rect.origin.x, rect.origin.y + self.radius)];
+        [_bufferPath addLineToPoint:CGPointMake(rect.origin.x + 2 * self.radius, rect.origin.y + self.radius)];
     } else {
-        _loaderBackgroundPath = [UIBezierPath bezierPathWithArcCenter:center radius:self.radius startAngle:self.offset endAngle:(self.arcLength + self.offset) clockwise:YES];
+        _bufferPath = [UIBezierPath bezierPathWithArcCenter:center radius:self.radius startAngle:self.offset endAngle:(self.arcLength + self.offset) clockwise:YES];
         
         _loaderPath = [UIBezierPath bezierPathWithArcCenter:center radius:self.radius startAngle:self.offset endAngle:[self circleEndAngle] clockwise:YES];
     }
@@ -157,7 +153,7 @@ const CGFloat pi = 3.14159265359;
             fromVal = [NSNumber numberWithFloat:((float)self.prevPercentage / (float)self.percentage)];
         }
         
-        self.backgroundCircleLayer.path = [self.loaderBackgroundPath CGPath];
+        self.backgroundCircleLayer.path = [self.bufferPath CGPath];
         self.circleLayer.path = [self.loaderPath CGPath];
         
         CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
@@ -190,6 +186,19 @@ const CGFloat pi = 3.14159265359;
 
 #pragma mark properties
 
+- (void)allowClicks:(BOOL)allow
+{
+    if (allow) {
+        if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
+        
+            // Start interaction with application
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        }
+    } else {
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    }
+}
+
 - (void)setPercentage:(NSInteger)percentage
 {
     //We never want to decrement the loading circle
@@ -203,38 +212,38 @@ const CGFloat pi = 3.14159265359;
     return self.percentage;
 }
 
-- (void)setLoaderBackgroundColor:(UIColor *)loaderBackgroundColor
+- (void)setBufferColor:(UIColor *)bufferColor
 {
-    if (_loaderBackgroundColor != loaderBackgroundColor && self.endingAnimStarted == NO){
-        if (self.loaderBackgroundColorAnimating) {
-            [self.loaderBackgroundColorQueue addObject:loaderBackgroundColor];
+    if (_bufferColor != bufferColor && self.endingAnimStarted == NO){
+        if (self.bufferColorAnimating) {
+            [self.bufferColorQueue addObject:bufferColor];
         } else {
-            self.loaderBackgroundColorAnimating = YES;
+            self.bufferColorAnimating = YES;
             
             [CATransaction begin];
             [CATransaction setValue:[NSNumber numberWithFloat:self.duration]
                          forKey:kCATransactionAnimationDuration];
             [CATransaction setCompletionBlock:^{
-                [self loaderBackgroundColorAnimEnded];
+                [self bufferColorAnimEnded];
             }];
             
             // Perform the animations
-            self.backgroundCircleLayer.strokeColor = [loaderBackgroundColor CGColor];
+            self.backgroundCircleLayer.strokeColor = [bufferColor CGColor];
             [CATransaction commit];
         
-            _loaderBackgroundColor = loaderBackgroundColor;
+            _bufferColor = bufferColor;
         }
     }
 }
 
-- (void)loaderBackgroundColorAnimEnded
+- (void)bufferColorAnimEnded
 {
-    self.loaderBackgroundColorAnimating = NO;
-    if ([self.loaderBackgroundColorQueue count] > 0) {
-        UIColor *first = [self.loaderBackgroundColorQueue firstObject];
-        [self setLoaderBackgroundColor:first];
+    self.bufferColorAnimating = NO;
+    if ([self.bufferColorQueue count] > 0) {
+        UIColor *first = [self.bufferColorQueue firstObject];
+        [self setBufferColor:first];
         
-        [self.loaderBackgroundColorQueue removeObjectAtIndex:0];
+        [self.bufferColorQueue removeObjectAtIndex:0];
     }
 }
 
@@ -497,7 +506,7 @@ const CGFloat pi = 3.14159265359;
     
     _backColor = [UIColor lightGrayColor];
     _loadedColor = [UIColor whiteColor];
-    _loaderBackgroundColor = [UIColor darkGrayColor];
+    _bufferColor = [UIColor darkGrayColor];
     
     [self setAlpha:0.5];
     
@@ -515,7 +524,7 @@ const CGFloat pi = 3.14159265359;
     _offset = -pi;
     _arcLength = 2* pi;
     
-    _loaderBackgroundPath = nil;
+    _bufferPath = nil;
     _loaderPath = nil;
     
     _circleLayer = nil;
@@ -536,8 +545,8 @@ const CGFloat pi = 3.14159265359;
     _loadedColorAnimating = NO;
     _loadedColorQueue = [[NSMutableArray alloc] init];
     
-    _loaderBackgroundColorAnimating = NO;
-    _loaderBackgroundColorQueue = [[NSMutableArray alloc] init];
+    _bufferColorAnimating = NO;
+    _bufferColorQueue = [[NSMutableArray alloc] init];
     
     _backgroundColorAnimating = NO;
     _backgroundColorQueue = [[NSMutableArray alloc] init];
@@ -550,7 +559,7 @@ const CGFloat pi = 3.14159265359;
 
 - (void)createLayers
 {
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    [self allowClicks:NO];
     
     if (self.backgroundLayer == nil) {
         CAShapeLayer *shapeLayer = [CAShapeLayer layer];
@@ -568,7 +577,7 @@ const CGFloat pi = 3.14159265359;
     if (self.backgroundCircleLayer == nil) {
         CAShapeLayer *shapeLayer = [CAShapeLayer layer];
         
-        shapeLayer.strokeColor = [self.loaderBackgroundColor CGColor];
+        shapeLayer.strokeColor = [self.bufferColor CGColor];
         shapeLayer.fillColor = nil;
         shapeLayer.lineWidth = _width + self.buff;
         shapeLayer.lineJoin = kCALineJoinBevel;
@@ -577,7 +586,7 @@ const CGFloat pi = 3.14159265359;
         
         self.backgroundCircleLayer = shapeLayer;
         
-        self.backgroundCircleLayer.path = [self.loaderBackgroundPath CGPath];
+        self.backgroundCircleLayer.path = [self.bufferPath CGPath];
     }
     
     if (self.circleLayer == nil) {

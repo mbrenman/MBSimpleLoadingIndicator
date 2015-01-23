@@ -49,7 +49,7 @@
                 
                 //Change loader colors
                 [_loadview setLoadedColor:[UIColor darkGrayColor]];
-                [_loadview setLoaderBackgroundColor:[UIColor whiteColor]];
+                [_loadview setBufferColor:[UIColor whiteColor]];
                 [_loadview setBackColor:[UIColor lightGrayColor]];
                 
                 //Change loader sizes
@@ -62,7 +62,7 @@
                 
                 //Change loader colors
                 [_loadview setLoadedColor:[UIColor orangeColor]];
-                [_loadview setLoaderBackgroundColor:[UIColor blackColor]];
+                [_loadview setBufferColor:[UIColor blackColor]];
                 [_loadview setBackColor:[UIColor magentaColor]];
                 
                 //Change loader sizes
