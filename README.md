@@ -68,7 +68,7 @@ NSInteger amt = [_loadview getPercentage];
 
 ##Other useful things
 ``` objc
-//Hide the loader (useful if error in main app occured)
+//Hide the loader (useful if error in main app occurred)
 [_loadview dismiss];
 
 //Turn off interaction blocking
